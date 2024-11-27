@@ -2,3 +2,5 @@
 .env
 /vendor/
 /uploads
+/src/public/Storage
+/src/public/uploads

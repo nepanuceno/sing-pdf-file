@@ -108,27 +108,29 @@
 <body>
     <div class="upload-container">
         <h2>Upload Múltiplo de PDFs</h2>
-        <form id="pdf-form" action="/index.php" method="POST" enctype="multipart/form-data">
+        <form id="pdf-form" action="/upload.php" method="POST" enctype="multipart/form-data">
             <input type="file" id="file-input" name="pdfFiles[]" accept=".pdf" multiple required>
             <label for="file-input" class="file-label">Selecionar PDFs</label>
             
             <div id="file-list"></div>
             
-            <button type="submit" id="upload-btn" class="upload-btn" disabled>Fazer Upload</button>
+            <button type="submit" id="upload-btn" class="upload-btn" disabled>Assinar</button>
         </form>
         
         <div id="progress-container">
             <div id="progress-bar"></div>
         </div>
     </div>
+    <a href="" id="blob"></a>
 
-    <script>
+    <script type="text/JavaScript">
         const fileInput = document.getElementById('file-input');
         const form = document.getElementById('pdf-form');
         const fileList = document.getElementById('file-list');
         const uploadBtn = document.getElementById('upload-btn');
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
+        const linkBlob = document.getElementById('blob');
 
         const selectedFiles = new Set();
 
@@ -174,6 +176,8 @@
             
             const xhr = new XMLHttpRequest();
             xhr.open('POST', form.action, true);
+            //xhr.responseType = "blob";
+
 
             progressContainer.style.display = 'block';
             uploadBtn.disabled = true;
@@ -187,7 +191,16 @@
 
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    alert('Upload concluído com sucesso!');
+                    console.log(xhr.response)
+                    //$resp = JSON.parse(xhr.response);
+                    //const url = window.URL.createObjectURL(xhr.response);
+
+                    // Create a link element
+                   // console.log(url);
+                    //linkBlob.setAttribute('href', url);
+                    //linkBlob.textContent = "Download";
+                    //linkBlob.click();
+                    //alert($resp.message);
                     selectedFiles.clear();
                     fileInput.value = '';
                     renderFileList();
