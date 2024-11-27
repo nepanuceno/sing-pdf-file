@@ -1,11 +1,17 @@
-# basic-docker-project
-A simple basic docker infrastructure project for PHP applications.
+# RSA-certified PDF file signer
 
-With this Docker framework, you can run a pure PHP project or even a Laravel project, just take the files from this project to your project, and in case it's Laravel, uncomment the evironment settings if you need to.
+WEB system to batch sign PDF files with RSA certificate.
 
-Change the name of the services as you wish, add the services you need, enable them, disable the ports you need and get to work.
-
+## Run WEB Application
 ``` 
 docker-compose up -d
 ```
-# sing-pdf-file
+## How to Generate a Compatible RSA Key
+
+- Access the online system ```https://getacert.com/getacert.html```.
+- Fill in the form with the respective information and then click on the "Next Page" button.
+- Download the files with the extensions .cer, .csr e.pkey.
+- In the "certified" directory at the root of the project, create a file with the .crt extension and paste the contents of the files that .cer, .csr, and .pkey into the .crt file.
+  
+### Help
+- To understand better, open the cert.crt file inside the certified directory and observe the way the content is.

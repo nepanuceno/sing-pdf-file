@@ -17,7 +17,7 @@ class FileSigningTCPDF
         //Obs.: Tentei usar o certificado no formato PFX e não funcionou
         //Para converter use o comando no Prompt do Windows ou Terminal do Linux:
         //openssl pkcs12 -in certificado.pfx -out tcpdf.crt -nodes
-        $cert = '../../certificado/cert.crt';
+        $cert = '../../certified/cert.crt';
 
         //Informações da assinatura - Preencha com os seus dados
         $info = array(
