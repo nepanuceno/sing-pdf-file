@@ -1,0 +1,106 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+.upload-container {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+#pdf-form {
+    display: contents;
+}
+#file-input {
+    display: none;
+}
+.file-label {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+.file-label:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+#file-list-download {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 2px dashed #2ecc71;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    display: none;
+}
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f1f1f1;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 6px;
+}
+.file-item .file-name {
+    flex-grow: 1;
+    text-align: left;
+    margin-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.file-item .remove-file {
+    color: #e74c3c;
+    cursor: pointer;
+    font-weight: bold;
+}
+.file-item .download-file {
+    color: #2ecc71;
+    cursor: pointer;
+    font-weight: bold;
+}
+.upload-btn {
+    padding: 12px 25px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.upload-btn:hover {
+    background-color: #27ae60;
+}
+.upload-btn:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+#progress-container {
+    margin-top: 20px;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+    height: 25px;
+    display: none;
+}
+#progress-bar {
+    width: 0;
+    height: 100%;
+    background-color: #2ecc71;
+    border-radius: 5px;
+    transition: width 0.5s ease-in-out;
+}
