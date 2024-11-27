@@ -1,13 +1,14 @@
 <?php 
 
 use App\Request\FileRequest;
+use App\Services\DownloadSignedFiles;
 use App\Services\PDFUploader;
 use App\Services\FileSigningTCPDF;
 use App\Services\ZipAsignedFiles;
 
 require_once dirname(__FILE__) . "/../../vendor/autoload.php";
 
-// header('Content-Type: application/json');
+header('Content-Type: application/json');
 
 try {    
     $arrFileSigned = [];  
@@ -18,9 +19,9 @@ try {
         $arrFileSigned[] = (new FileSigningTCPDF($item['filename'], $item['new_filename']))->sing();
     }
     
-    (new ZipAsignedFiles())->zip($arrFileSigned);
-
-    echo json_encode(['status'=>true,'message' => 'Sucesso!', 'files' => $arrFileSigned]);
+    $zipFile = (new ZipAsignedFiles())->zip($arrFileSigned);
+    (new DownloadSignedFiles( $zipFile));
+    // echo json_encode(['status'=>true,'message' => 'Sucesso!', 'zipFile' =>  $zipFile]);
     
  } catch (Exception $e) {
     header('HTTP/1.1 500 Internal Server Error');

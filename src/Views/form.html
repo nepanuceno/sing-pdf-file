@@ -46,12 +46,14 @@
         }
         
         #file-list-download {
-            max-height: 250px;
+            max-height: 200px;
             overflow-y: auto;
-            border: 2px dashed #e0e0e0;
+            border: 2px dashed #2ecc71;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 8px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            display: none;
         }
         .file-item {
             display: flex;
@@ -182,27 +184,42 @@
             let resp = JSON.parse(files);
             fileListDownload.innerHTML = '';
 
-            resp.files.forEach(file => {
-                console.log(`Name: ${file}`);
-                const fileItem = document.createElement('div');
-                fileItem.classList.add('file-item');
-                
-                const fileName = document.createElement('span');
-                fileName.classList.add('file-name');
-                fileName.textContent = file;
+            console.log(resp.zipFile);
 
-                const downloadBtn = document.createElement('span');
-                downloadBtn.classList.add('download-file');
-                downloadBtn.textContent = 'Baixar';
-                downloadBtn.addEventListener('click', () => {
-                    selectedFiles.delete(file);
-                    renderFileList();
-                });
+          
+            console.log(`Name: ${resp.zipFile}`);
+            const fileItem = document.createElement('div');
+            fileItem.classList.add('file-item');
+            
+            const fileName = document.createElement('span');
+            fileName.classList.add('file-name');
+            fileName.textContent = resp.zipFile;
 
-                fileItem.appendChild(fileName);
-                fileItem.appendChild(downloadBtn);
-                fileListDownload.appendChild(fileItem);
+            const downloadBtn = document.createElement('a');
+            downloadBtn.classList.add('download-file');
+            downloadBtn.textContent = 'Baixar';
+            downloadBtn.href = "./Storage/" + resp.zipFile;
+            downloadBtn.addEventListener('click', () => {
+                selectedFiles.delete(resp.zipFile);
+                renderFileList();
             });
+
+            fileItem.appendChild(fileName);
+            fileItem.appendChild(downloadBtn);
+            fileListDownload.style.display = 'block';
+            fileListDownload.appendChild(fileItem);
+           
+        }
+
+        function getFileName(xhr) {
+            const contentDisposition = xhr.getResponseHeader('Content-Disposition');
+            if (contentDisposition) {
+                const matches = /filename="([^"]*)"/.exec(contentDisposition);
+                if (matches != null && matches[1]) { 
+                    filename = matches[1];
+                }
+                return filename;
+            }
         }
 
         form.addEventListener('submit', function(e) {
@@ -212,6 +229,7 @@
             
             const xhr = new XMLHttpRequest();
             xhr.open('POST', form.action, true);
+            xhr.responseType = "blob";
 
             progressContainer.style.display = 'block';
             uploadBtn.disabled = true;
@@ -225,8 +243,20 @@
 
             xhr.onload = function() {
                 if (xhr.status === 200 || hr.status === 201) {
-                    
-                    renderListaFilesDownload(xhr.response);
+                    const blob = xhr.response;
+                    filename = getFileName(xhr);
+
+                    // You can now use the Blob object, for example, to create a URL and download the file
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename; // Replace with your desired file name and extension
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    //renderListaFilesDownload(xhr.response);
                     selectedFiles.clear();
                     fileInput.value = '';
                     renderFileList();
