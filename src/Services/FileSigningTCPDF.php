@@ -11,7 +11,7 @@ class FileSigningTCPDF
         private string $tempFileName
     ){}
 
-    public function sing(): void
+    public function sing(): string
     {
         //Endereço do arquivo do certificado
         //Obs.: Tentei usar o certificado no formato PFX e não funcionou
@@ -45,32 +45,38 @@ class FileSigningTCPDF
         $pdf->AddPage();
 
         // set font
-        $pdf->SetFont('helvetica', '', 12);
+        // $pdf->SetFont('helvetica', '', 12);
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // *** set signature appearance ***
 
         // create content for signature (image and/or text)
-        $pdf->Image('../../files/stamp.png', 90, 200, 25, 25, 'PNG');
+        $pdf->Image('../../files/stamp-certificate.png', 90, 200, 25, 25, 'PNG');
 
         // define active area for signature appearance
-        $pdf->setSignatureAppearance(90, 250, 25, 25);
+        $pdf->setSignatureAppearance(90, 220, 25, 25);
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         // *** set an empty signature appearance ***
-        // $pdf->addEmptySignatureAppearance(180, 80, 15, 15);
+        $pdf->addEmptySignatureAppearance(90, 250, 25, 25);
 
-        $pdf->setSourceFile(__DIR__ . '/../../uploads/'.$this->tempFileName);
+
+        $pathTempFile = __DIR__ . '/../../uploads/'.$this->tempFileName;
+
+        $pdf->setSourceFile($pathTempFile);
+
+        unlink($pathTempFile);
+        
         $tplId = $pdf->importPage(1);
         $pdf->useTemplate($tplId, 0, 0); //Importa nas medidas originais
 
         $fileAsign = 'asign-'.$this->filename;
-        // var_dump($fileAsign) or die();
-
 
         //Manda o PDF pra download
         $pdf->Output(__DIR__ . '/../public/Storage/'.$fileAsign, 'F');
+
+        return $fileAsign;
     }
 }
 

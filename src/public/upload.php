@@ -8,15 +8,16 @@ require_once dirname(__FILE__) . "/../../vendor/autoload.php";
 
 // header('Content-Type: application/json');
 
-try {      
+try {    
+    $arrFileSigned = [];  
     $uploader = new PDFUploader();
     $resp = $uploader->handleUpload(new FileRequest());
     
     foreach($resp as $item) {        
-        (new FileSigningTCPDF($item['filename'], $item['new_filename']))->sing();
-    }
+        $arrFileSigned[] = (new FileSigningTCPDF($item['filename'], $item['new_filename']))->sing();
+    }    
 
-    // echo json_encode(['status'=>true,'message' => 'Sucesso!']);
+    echo json_encode(['status'=>true,'message' => 'Sucesso!', 'files' => $arrFileSigned]);
     
  } catch (Exception $e) {
     header('HTTP/1.1 500 Internal Server Error');

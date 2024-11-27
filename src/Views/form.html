@@ -44,7 +44,8 @@
             background-color: #2980b9;
             transform: scale(1.05);
         }
-        #file-list {
+        
+        #file-list-download {
             max-height: 250px;
             overflow-y: auto;
             border: 2px dashed #e0e0e0;
@@ -70,6 +71,11 @@
         }
         .file-item .remove-file {
             color: #e74c3c;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .file-item .download-file {
+            color: #2ecc71;
             cursor: pointer;
             font-weight: bold;
         }
@@ -120,6 +126,8 @@
         <div id="progress-container">
             <div id="progress-bar"></div>
         </div>
+
+        <div id="file-list-download"></div>
     </div>
     <a href="" id="blob"></a>
 
@@ -127,6 +135,7 @@
         const fileInput = document.getElementById('file-input');
         const form = document.getElementById('pdf-form');
         const fileList = document.getElementById('file-list');
+        const fileListDownload = document.getElementById('file-list-download');
         const uploadBtn = document.getElementById('upload-btn');
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
@@ -169,6 +178,33 @@
             uploadBtn.disabled = selectedFiles.size === 0;
         }
 
+        function renderListaFilesDownload(files) {
+            let resp = JSON.parse(files);
+            fileListDownload.innerHTML = '';
+
+            resp.files.forEach(file => {
+                console.log(`Name: ${file}`);
+                const fileItem = document.createElement('div');
+                fileItem.classList.add('file-item');
+                
+                const fileName = document.createElement('span');
+                fileName.classList.add('file-name');
+                fileName.textContent = file;
+
+                const downloadBtn = document.createElement('span');
+                downloadBtn.classList.add('download-file');
+                downloadBtn.textContent = 'Baixar';
+                downloadBtn.addEventListener('click', () => {
+                    selectedFiles.delete(file);
+                    renderFileList();
+                });
+
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(downloadBtn);
+                fileListDownload.appendChild(fileItem);
+            });
+        }
+
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -176,8 +212,6 @@
             
             const xhr = new XMLHttpRequest();
             xhr.open('POST', form.action, true);
-            //xhr.responseType = "blob";
-
 
             progressContainer.style.display = 'block';
             uploadBtn.disabled = true;
@@ -190,22 +224,14 @@
             };
 
             xhr.onload = function() {
-                if (xhr.status === 200) {
-                    console.log(xhr.response)
-                    //$resp = JSON.parse(xhr.response);
-                    //const url = window.URL.createObjectURL(xhr.response);
-
-                    // Create a link element
-                   // console.log(url);
-                    //linkBlob.setAttribute('href', url);
-                    //linkBlob.textContent = "Download";
-                    //linkBlob.click();
-                    //alert($resp.message);
+                if (xhr.status === 200 || hr.status === 201) {
+                    
+                    renderListaFilesDownload(xhr.response);
                     selectedFiles.clear();
                     fileInput.value = '';
                     renderFileList();
                 } else {
-                    alert('Erro no upload');
+                    alert('Erro ao Assinar');
                 }
                 progressContainer.style.display = 'none';
                 progressBar.style.width = '0%';
